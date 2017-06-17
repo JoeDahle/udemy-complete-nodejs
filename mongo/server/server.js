@@ -114,7 +114,19 @@ app.post('/user', (req, res) => {
   }).catch((e) => {
     res.status(400).send(`Error adding new User: ${e}`);
   })
-})
+});
+
+app.get('/users/me', (req, res) => {
+  let token = req.header('x-auth');
+
+  User.findByToken(token).then((user) => {
+    if (!user) {
+
+    }
+
+    res.send(user)
+  })
+});
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
