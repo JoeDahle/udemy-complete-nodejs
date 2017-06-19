@@ -301,3 +301,26 @@ describe('POST /user/login', () => {
       });
   });
 });
+
+describe('DELETE /user/me/token', () => {
+  it('should remove the auth token on logout', (done) => {
+    // delete /user/me/token
+    // set x-auth to equal token
+    // 200
+    //  find user, verify token array is === len 0
+    request(app)
+      .delete('/user/me/token')
+      .set('x-auth', users[0].tokens[0].token)
+      .expect(200)
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
+
+        User.findById(users[0]._id).then((user) => {
+          expect(user.tokens.length).toBe(0);
+          done()
+        }).catch((e) => done(e));
+      });
+  });
+})
