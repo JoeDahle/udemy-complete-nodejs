@@ -8,6 +8,7 @@ const { ObjectID } = require('mongodb');
 let { mongoose } = require('./db/mongoose');
 let { Todo } = require('./models/todo');
 let { User } = require('./models/user');
+let { authenticate } = require('./middleware/authenticate');
 
 let app = express();
 const PORT = process.env.PORT;
@@ -98,6 +99,7 @@ app.patch('/todos/:id', (req, res) => {
 // POST /Users
 app.post('/user', (req, res) => {
   let newUserReq = _.pick(req.body, ['email', 'password']);
+  console.log('post');
   let newUser = new User({
     email: newUserReq.email,
     password: newUserReq.password,
@@ -116,16 +118,9 @@ app.post('/user', (req, res) => {
   })
 });
 
-app.get('/users/me', (req, res) => {
-  let token = req.header('x-auth');
-
-  User.findByToken(token).then((user) => {
-    if (!user) {
-
-    }
-
-    res.send(user)
-  })
+app.get('/user/me', authenticate, (req, res) => {
+  console.log('received');
+  res.send(req.user);
 });
 
 app.listen(PORT, () => {
