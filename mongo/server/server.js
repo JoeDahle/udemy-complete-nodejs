@@ -102,10 +102,6 @@ app.post('/user', (req, res) => {
   let newUser = new User({
     email: newUserReq.email,
     password: newUserReq.password,
-    tokens: {
-      access: 'fhkdjs',
-      token: 'fjdksla'
-    }
   });
 
   newUser.save().then(() => {
@@ -131,6 +127,14 @@ app.post('/user/login', (req, res) => {
   }).catch((e) => {
     res.status(400).send({});
   });
+});
+
+app.delete('/user/me/token', authenticate, (req, res) => {
+  req.user.removeToken(req.token).then(() => {
+    res.status(200).send();
+  }, (err) => {
+    res.status(400).send(err);
+  })
 });
 
 app.listen(PORT, () => {
