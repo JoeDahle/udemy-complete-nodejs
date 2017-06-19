@@ -118,7 +118,6 @@ app.post('/user', (req, res) => {
 });
 
 app.get('/user/me', authenticate, (req, res) => {
-  console.log('received');
   res.send(req.user);
 });
 
